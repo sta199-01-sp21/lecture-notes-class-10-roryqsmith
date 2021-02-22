@@ -55,16 +55,26 @@ xtabs(~ Treatment + Improved, data = Arthritis) %>%
 
 - How many patients were enrolled in the clinical trial?
 
+84 patients were enrolled in the clinical trial.
+
 - What is the probability a randomly selected patient received the placebo?
+
+The marginal probability is 43/84 or approximately 52%.
 
 - What is the probability a randomly selected patient received the placebo
   and had a marked improvement?
   
+The probability is 7/84 or 8.3%.
+  
 - What is the probability a randomly selected patient received the placebo
   and the treatment?
   
+The probability is zero - this is a disjoint probability.
+  
 - What is the probability a randomly selected patient had some improvement or
   was on the treatment?
+  
+The probability is 48/84 or 57%.
 
 ## Using computer simulations to calculate probabilities
 
@@ -80,6 +90,10 @@ marbles <- c("red", "red", "white", "red", "blue", "blue", "red", "blue")
 Suppose we draw a single marble from our imaginary box, where all the marbles
 are equally likely to be selected. What is the probability the marble is blue? 
 How about white?
+
+blue - 3/8 (37.5%)
+white - 1/8 (12.5%)
+red - 4/8 (50%)
 
 We can simulate this "drawing" with the `sample()` function.
 
@@ -97,7 +111,7 @@ of eight marbles each time. This way we can easily simulate our marble-drawing
 experiment.
 
 ```{r simulate_draws}
-draw_results <- sample(marbles, size = 10000, replace = TRUE)
+draw_results <- sample(marbles, size = 100000, replace = TRUE)
 ```
 
 ```{r summarize_draws}
@@ -106,6 +120,8 @@ prop.table(counts)
 ```
 
 How close is this value to the "true" probability?
+
+All of the values are close to the true probabilities. The first time I ran the simulation, the white marble's probability is the same, and the blue and red are just slightly off. This reflects the Law of Large Numbers.
 
 **To summarize our process:**
 
@@ -122,6 +138,8 @@ color if we make two draws with replacement? We haven't discussed how to
 compute this theoretically yet, but this is what computers are good at.
 
 Before we do this, what is your guess as to what the probability will be?
+
+I think that the probability will be larger than expected, since there are 3 and 4 instances of the same color. However, it isn't very likely since neither probability has a majority in the entire sample space.
 
 We'll still use `sample()` to run our simulation many times, but we'll
 use `dplyr` functions to compute the relative frequencies.
@@ -152,6 +170,8 @@ two_draw_results %>%
   mutate(proportion = n / sum(n))
 ```
 
+Two marbles of the same draw are picked 39.5% of the time.
+
 ## Practice
 
 Suppose you roll two fair six-sided dice. Which has a higher probability:
@@ -163,15 +183,24 @@ Perform a simulation to compute this empirical probability.
 Write down your guess to the answer before you calculate it.
 
 ```{r simulate_rolls}
-
+roll_results <- tibble(
+  roll_1 = sample(1:6, size = 10000, replace = TRUE),
+  roll_2 = sample(1:6, size = 10000, replace = TRUE)
+)
+roll_results
 ```
 
 ```{r identify_events}
-
+roll_results <- roll_results %>% 
+  mutate(square_rolls = roll_1 ^ 2 == roll_2) %>%
+  mutate(abs_rolls = abs(roll_1 - roll_2) == 4)
+roll_results
 ```
 
 ```{r summarize_rolls}
-
+roll_results %>% 
+  summarize(roll1_prob = mean(roll_1),
+            roll2_prob = mean(roll_2))
 ```
 
 ## Additional Resources-please look at before Weds.

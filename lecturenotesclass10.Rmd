@@ -1,11 +1,16 @@
 ---
 title: "Introduction to probability"
-author: ""
-date: ""
+author: "Rory Smith"
+date: "02-22-2021"
 output: html_document
 editor_options: 
   chunk_output_type: console
 ---
+
+```{r git-config}
+library(usethis)
+use_git_config(user.name= "roryqsmith", user.email="rory.smith@duke.edu")
+```
 
 ```{r global_options, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE,
